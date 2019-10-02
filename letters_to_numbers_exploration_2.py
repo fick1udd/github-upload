@@ -61,6 +61,13 @@ class Chromosome:
 
         return int(amounts[2]) - (int(amounts[0]) + int(amounts[1]))
 
+    def new_cr_from_old(self, chromosome):
+        new_ex = chromosome[1:]
+        random.shuffle(new_ex)
+        new_ex = [1] + new_ex
+        health = self.score(new_ex)
+        return [health, new_ex, 0]
+
 
 class Population(Chromosome):
 
@@ -194,7 +201,8 @@ class ExplorePopulation:
                 if health_score == 0:
                     right_chromosome.update(
                         self.perfect_score_stat(right_chromosome, all_info))
-                    explored[ind] = self.new_cr_from_old(chr)
+                    explored[ind] = self.pop.new_cr_from_old(chr)
+                    # explored[ind] = self.new_cr_from_old(chr)
 
                 elif generation >= round(var):
                     print(f"round(var): {round(var)}")
@@ -219,7 +227,8 @@ class ExplorePopulation:
 
                     for ind in index_list[start_ind:]:
                         chr = explored[ind][1]
-                        new_explored_chromosome = self.new_cr_from_old(chr)
+                        new_explored_chromosome = self.pop.new_cr_from_old(chr)
+                        # new_explored_chromosome = self.new_cr_from_old(chr)
                         explored[ind] = new_explored_chromosome
                         print(f"ind: {ind} for explored,\
                         new explored[ind]: {new_explored_chromosome}")
@@ -269,13 +278,6 @@ class ExplorePopulation:
             children group. health scores ar integers
         """
         health = [sub_lst[0][0] for sub_lst in explored]
-
-    def new_cr_from_old(self, chromosome):
-        new_ex = chromosome[1:]
-        random.shuffle(new_ex)
-        new_ex = [1] + new_ex
-        health = self.pop.score(new_ex)
-        return [health, new_ex, 0]
 
     def parent_and_children(self):
         random.shuffle(self.pop.pos)
